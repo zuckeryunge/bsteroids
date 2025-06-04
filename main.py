@@ -44,10 +44,14 @@ def main():
         for instance in gp_updatable:
             instance.update(dt)
         #check collision with asteroids
-        for instance in gp_asteroids:
-            if instance.is_collision(player):
+        for i_asteroid in gp_asteroids:
+            if i_asteroid.is_collision(player):
                 print("Game over!")
                 exit()
+            for i_shot in gp_shots:
+                if i_asteroid.is_collision(i_shot):
+                    i_asteroid.split()
+                    i_shot.kill()
         #draw everything
         for instance in gp_drawable:
             instance.draw(screen)
