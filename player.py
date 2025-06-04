@@ -25,7 +25,6 @@ class Player(CircleShape):
     def move(self, dt):
         go = pygame.Vector2(0 ,1).rotate(self.rotation)
         go = go * (PLAYER_SPEED * dt)
-        print("lol works")
         self.position = self.position + go
 
     def update(self, dt):

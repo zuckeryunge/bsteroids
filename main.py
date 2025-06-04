@@ -2,6 +2,9 @@
 # the open-source pygame library
 # throughout this file
 import pygame
+from asteroidfield import AsteroidField
+from asteroid import Asteroid
+import asteroidfield
 from constants import *
 from player import *
 def main():
@@ -11,19 +14,31 @@ def main():
     i = 1
 
     pygame.init()
+    gp_updatable = pygame.sprite.Group()
+    gp_drawable = pygame.sprite.Group()
+    gp_asteroids = pygame.sprite.Group()
+    
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
+    
+    AsteroidField.containers = gp_updatable
+    Asteroid.containers = (gp_asteroids, gp_updatable, gp_drawable)    
+    Player.containers = (gp_updatable, gp_drawable) 
+
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
+    asteroidfield = AsteroidField()
 
-
+   
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
-        player.update(dt)
-        player.draw(screen)
+        for instance in gp_updatable:
+            instance.update(dt)
+        for instance in gp_drawable:
+            instance.draw(screen)
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
