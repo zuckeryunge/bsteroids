@@ -35,10 +35,20 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
+
+        #group_checks
+        #update instances
         for instance in gp_updatable:
             instance.update(dt)
+        #check collision with asteroids
+        for instance in gp_asteroids:
+            if instance.is_collision(player):
+                print("Game over!")
+                exit()
+        #draw everything
         for instance in gp_drawable:
             instance.draw(screen)
+        
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
