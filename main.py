@@ -12,7 +12,6 @@ def main():
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
-    i = 1 #i is just for frame counting
 
     pygame.init()
     gp_updatable = pygame.sprite.Group()
@@ -23,7 +22,12 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
-    
+
+    asteroids_shot = 0
+    time_alive = 0
+    points_total = 0
+
+
     AsteroidField.containers = gp_updatable
     Asteroid.containers = (gp_asteroids, gp_updatable, gp_drawable)    
     Player.containers = (gp_updatable, gp_drawable) 
@@ -31,6 +35,13 @@ def main():
 
     player = Player((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
     asteroidfield = AsteroidField()
+
+    def game_stats():
+        print(f"asteroids shot: {asteroids_shot}, time alive: {int(time_alive)}, shots fired: {player.shot_count}")
+        points_total = int(((asteroids_shot * 10) + (time_alive / 2) - (player.shot_count / 6)) * 10)
+        if points_total < 0:
+            points_total = 0
+        print(f"=== total points: {points_total} ===")
 
    
     while True:
@@ -47,10 +58,12 @@ def main():
         for i_asteroid in gp_asteroids:
             if i_asteroid.is_collision(player):
                 print("Game over!")
+                game_stats()
                 exit()
             for i_shot in gp_shots:
                 if i_asteroid.is_collision(i_shot):
                     i_asteroid.split()
+                    asteroids_shot += 1
                     i_shot.kill()
         #draw everything
         for instance in gp_drawable:
@@ -59,13 +72,7 @@ def main():
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
-
-        # print framecount every 60 frames
-        if i % 60 == 0:
-            print(f"frame {i}")
-        i += 1
-
-        
+        time_alive += 1 / 60
 if __name__ == "__main__":
     main()
 

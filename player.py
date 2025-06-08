@@ -8,6 +8,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.wait_shoot = 0
+        self.shot_count = 0
 
     # in the player class
     def triangle(self):
@@ -35,6 +36,9 @@ class Player(CircleShape):
         pew.velocity.rotate_ip(self.rotation)
         pew.velocity *= PLAYER_SHOOT_SPEED
         self.wait_shoot = PLAYER_SHOOT_COOLDOWN
+        self.shot_count += 1;
+        
+
 
     def update(self, dt):
         if self.wait_shoot > 0:
@@ -52,3 +56,12 @@ class Player(CircleShape):
         if keys[pygame.K_SPACE]:
             if self.wait_shoot <= 0:
                 self.shoot()
+                
+        if self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+        if self.position.x > SCREEN_WIDTH:
+            self.position.x = 0;
+        if self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
+        if self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0;
